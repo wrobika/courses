@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,15 +9,17 @@ namespace WebCourses.Models
 {
     public class Course
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
-        public string Title { get; set; }           //nazwa kursu
+        public string Title { get; set; }
 
-        public User Teacher { get; set; }           //nauczyciel tworzacy kurs
-        public string TeacherId { get; set; }       //klucz obcy nauczyciela
+        public string Description { get; set; }
 
-        public List<User> Students { get; set; }    //uczniowie z dostepem do kursu
-        public List<Test> Tests { get; set; }       // testy w kursie
+        public IList<CourseUser> CourseUsers { get; set; }
 
+        public string UserId { get; set; }
+        public User User { get; set; }
     }
 }
