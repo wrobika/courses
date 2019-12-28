@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using WebCourses.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebCourses.Models;
 
 namespace WebCourses
 {
@@ -37,7 +38,7 @@ namespace WebCourses
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<User>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -46,7 +47,7 @@ namespace WebCourses
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
-            RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+            RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -75,7 +76,7 @@ namespace WebCourses
             CreateRoles(roleManager, userManager);
         }
 
-        private void CreateRoles(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+        private void CreateRoles(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             //var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             //var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
@@ -95,11 +96,11 @@ namespace WebCourses
                 }
             }
 
-            Task<IdentityUser> _user = userManager.FindByEmailAsync(Configuration["AdminEmail"]);
+            Task<User> _user = userManager.FindByEmailAsync(Configuration["AdminEmail"]);
             _user.Wait();
             if (_user.Result == null)
             {
-                var admin = new IdentityUser
+                var admin = new User
                 {
                     UserName = Configuration["AdminEmail"],
                     Email = Configuration["AdminEmail"],
@@ -118,7 +119,7 @@ namespace WebCourses
             _user.Wait();
             if (_user.Result == null)
             {
-                var teacher = new IdentityUser
+                var teacher = new User
                 {
                     UserName = Configuration["TeacherEmail"],
                     Email = Configuration["TeacherEmail"],
@@ -137,7 +138,7 @@ namespace WebCourses
             _user.Wait();
             if (_user.Result == null)
             {
-                var student = new IdentityUser
+                var student = new User
                 {
                     UserName = Configuration["StudentEmail"],
                     Email = Configuration["StudentEmail"],
