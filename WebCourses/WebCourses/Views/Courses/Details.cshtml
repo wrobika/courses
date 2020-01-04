@@ -67,6 +67,7 @@
             }
         }
     </ul>
+    <a asp-action="Index" asp-controller="Tests" asp-route-courseId="@Model.Id">Manage tests</a>
 }
 
 @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Student"))
@@ -74,5 +75,16 @@
     @if (Model.CourseUsers.Where(cu => cu.UserId == @UserManager.GetUserId(User)).First().Confirmed == false)
     {
         <strong>You are not confirmed</strong>
+    }
+    else
+    {
+        <strong>Available tests: </strong>
+        @foreach (var test in Model.Tests)
+        {
+            <li>
+                <strong>@test.Name</strong>
+                <a asp-action="Details" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Details</a>
+            </li>
+        }
     }
 }

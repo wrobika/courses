@@ -113,6 +113,7 @@ namespace WebCourses.Controllers
             var course = await _context.Courses
                 .Include(c => c.CourseUsers)
                     .ThenInclude(cu => cu.User)
+                .Include(c => c.Tests)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (course == null)
             {

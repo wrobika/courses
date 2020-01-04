@@ -7,21 +7,22 @@ using System.Threading.Tasks;
 
 namespace WebCourses.Models
 {
-    public class Course
+    public class Test
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
-        public string Title { get; set; }
+        public string Name { get; set; }
 
         public string Description { get; set; }
 
-        public IList<CourseUser> CourseUsers { get; set; }
+        public DateTime ReleaseDate { get; set; } //data udostepnienia
 
-        public string UserId { get; set; }
-        public User User { get; set; }
+        public DateTime Deadline { get; set; } //data deadlinu
 
-        public IList<Test> Tests { get; set; }
+        public string CourseId { get; set; }
+
+        public Course Course { get; set; }
     }
 }
