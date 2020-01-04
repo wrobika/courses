@@ -49,6 +49,59 @@ namespace WebCourses.Controllers
             return View(courses);
         }
 
+        // GET: /Courses/Apply
+        public async Task<IActionResult> Apply()
+        {
+            User currentUser = await _userManager.GetUserAsync(User);
+            var userCourseIds = await _context.CourseUsers
+                .Where(cu => cu.UserId == currentUser.Id)
+                .Select(cu => cu.CourseId).ToListAsync();
+
+            var courses = await _context.Courses
+                .Include(c => c.User)
+                .Where(c => !userCourseIds.Contains(c.Id)).ToListAsync();
+
+            return View(courses);
+        }
+
+        [HttpPost]
+        // POST: /Courses/Register
+        public async Task<IActionResult> Register(string courseId)
+        {
+            User currentUser = await _userManager.GetUserAsync(User);
+            var courseUser = new CourseUser()
+            {
+                UserId = currentUser.Id,
+                CourseId = courseId,
+            };
+            _context.CourseUsers.Add(courseUser);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index","Courses");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Confirm(string confirmation, string userId, string courseId) {
+            if (confirmation == "true") {
+                var courseUser = await _context.CourseUsers
+                     .Where(cu => cu.UserId == userId)
+                     .Where(cu => cu.CourseId == courseId)
+                     .FirstOrDefaultAsync();
+                courseUser.Confirmed = true;
+                _context.CourseUsers.Update(courseUser);
+                await _context.SaveChangesAsync();
+            }
+
+            if (confirmation == "false") {
+                var courseUser = await _context.CourseUsers
+                    .Where(cu => cu.UserId == userId)
+                    .Where(cu => cu.CourseId == courseId)
+                    .FirstOrDefaultAsync();
+                _context.CourseUsers.Remove(courseUser);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Details", "Courses", new {id = courseId });
+        }
+
         // GET: Courses/Details/5
         public async Task<IActionResult> Details(string id)
         {
@@ -58,6 +111,8 @@ namespace WebCourses.Controllers
             }
 
             var course = await _context.Courses
+                .Include(c => c.CourseUsers)
+                    .ThenInclude(cu => cu.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (course == null)
             {

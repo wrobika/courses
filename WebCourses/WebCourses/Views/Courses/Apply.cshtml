@@ -1,0 +1,35 @@
+﻿@model IEnumerable<WebCourses.Models.Course>
+
+@{
+    ViewData["Title"] = "Apply";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+                          <div class="panel panel-default">
+                <div class="panel-heading">Courses</div>
+
+                <div class="panel-body">
+                    Page to apply for the course
+                    <form class="form-horizontal" action="/Courses/Register" method="Post">
+                        <br>
+                        <select class="form-control" name="courseId">
+                            @foreach (var item in Model)
+                            {
+                                <option value="@item.Id">@item.Id @item.Title</option>
+                            }
+                        </select>
+                        <br>
+                        <input type="submit">
+                    </form>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>

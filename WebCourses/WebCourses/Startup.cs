@@ -152,6 +152,44 @@ namespace WebCourses
                     newUserRole.Wait();
                 }
             }
+
+            _user = userManager.FindByEmailAsync(Configuration["Teacher1Email"]);
+            _user.Wait();
+            if (_user.Result == null)
+            {
+                var teacher = new User
+                {
+                    UserName = Configuration["Teacher1Email"],
+                    Email = Configuration["Teacher1Email"],
+                };
+                string adminPassword = Configuration["Password"];
+                Task<IdentityResult> createTeacher = userManager.CreateAsync(teacher, adminPassword);
+                createTeacher.Wait();
+                if (createTeacher.Result.Succeeded)
+                {
+                    Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(teacher, "Teacher");
+                    newUserRole.Wait();
+                }
+            }
+
+            _user = userManager.FindByEmailAsync(Configuration["Student2Email"]);
+            _user.Wait();
+            if (_user.Result == null)
+            {
+                var student = new User
+                {
+                    UserName = Configuration["Student2Email"],
+                    Email = Configuration["Student2Email"],
+                };
+                string studentPassword = Configuration["Password"];
+                Task<IdentityResult> createStudent = userManager.CreateAsync(student, studentPassword);
+                createStudent.Wait();
+                if (createStudent.Result.Succeeded)
+                {
+                    Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(student, "Student");
+                    newUserRole.Wait();
+                }
+            }
         }
     }
 }

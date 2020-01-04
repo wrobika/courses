@@ -1,11 +1,14 @@
 ﻿@model WebCourses.Models.Course
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 @{
     ViewData["Title"] = "Details";
 }
 
 <h2>Details</h2>
-
 <div>
     <h4>Course</h4>
     <hr />
@@ -28,3 +31,48 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
+{
+    <br> <strong>Students: </strong>
+    <ul>
+        @foreach (var courseUser in @Model.CourseUsers)
+        {
+            @if (courseUser.Confirmed == true)
+            {
+                <li>
+                    <strong>@courseUser.User.Email</strong>
+                </li>
+            }
+        }
+    </ul>
+
+    <br> <strong>Not confirmed students: </strong>
+    <ul>
+        @foreach (var courseUser in @Model.CourseUsers)
+        {
+            @if (courseUser.Confirmed == false)
+            {
+                <li>
+                    <strong>@courseUser.User.Email</strong>
+                    <form class="form-horizontal" method="post" action="/Courses/Confirm">
+                        <input type="hidden" value="@Model.Id" name="courseId" />
+                        <input type="hidden" value="@courseUser.UserId" name="userId" />
+                        <select class="col-md-4 control-label" name="confirmation">
+                            <option value="false">Reject</option>
+                            <option value="true">Confirm</option>
+                        </select>
+                        <input type="submit" value="Press" />
+                    </form>
+                </li>
+            }
+        }
+    </ul>
+}
+
+@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Student"))
+{
+    @if (Model.CourseUsers.Where(cu => cu.UserId == @UserManager.GetUserId(User)).First().Confirmed == false)
+    {
+        <strong>You are not confirmed</strong>
+    }
+}
