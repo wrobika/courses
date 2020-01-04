@@ -241,7 +241,7 @@ namespace WebCourses.Data.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Test");
+                    b.ToTable("Tests");
                 });
 
             modelBuilder.Entity("WebCourses.Models.User", b =>

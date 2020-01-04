@@ -8,7 +8,7 @@ namespace WebCourses.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Test",
+                name: "Tests",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
@@ -20,9 +20,9 @@ namespace WebCourses.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Test", x => x.Id);
+                    table.PrimaryKey("PK_Tests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Test_Courses_CourseId",
+                        name: "FK_Tests_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
@@ -30,15 +30,15 @@ namespace WebCourses.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Test_CourseId",
-                table: "Test",
+                name: "IX_Tests_CourseId",
+                table: "Tests",
                 column: "CourseId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Test");
+                name: "Tests");
         }
     }
 }

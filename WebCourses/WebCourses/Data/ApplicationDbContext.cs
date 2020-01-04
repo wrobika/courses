@@ -48,7 +48,5 @@ namespace WebCourses.Data
                 .WithMany(c => c.Tests)
                 .HasForeignKey(t => t.CourseId);
         }
-
-        public DbSet<WebCourses.Models.Test> Test { get; set; }
     }
 }

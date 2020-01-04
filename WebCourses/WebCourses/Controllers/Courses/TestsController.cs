@@ -23,7 +23,7 @@ namespace WebCourses.Controllers.Courses
         [Route("/Courses/{courseId}/Tests")]
         public async Task<IActionResult> Index(string courseId)
         {
-            var courseTests = await _context.Test
+            var courseTests = await _context.Tests
                 .Where(t => t.CourseId == courseId)
                 .ToListAsync();
             return View(courseTests);
@@ -38,7 +38,7 @@ namespace WebCourses.Controllers.Courses
                 return NotFound();
             }
 
-            var test = await _context.Test
+            var test = await _context.Tests
                 .Include(t => t.Course)
                 .FirstOrDefaultAsync(t => t.Id == testId && t.CourseId == courseId);
             if (test == null)
@@ -84,7 +84,7 @@ namespace WebCourses.Controllers.Courses
                 return NotFound();
             }
 
-            var test = await _context.Test.FindAsync(id);
+            var test = await _context.Tests.FindAsync(id);
             if (test == null)
             {
                 return NotFound();
@@ -137,7 +137,7 @@ namespace WebCourses.Controllers.Courses
                 return NotFound();
             }
 
-            var test = await _context.Test
+            var test = await _context.Tests
                 .Include(t => t.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (test == null)
@@ -153,15 +153,15 @@ namespace WebCourses.Controllers.Courses
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var test = await _context.Test.FindAsync(id);
-            _context.Test.Remove(test);
+            var test = await _context.Tests.FindAsync(id);
+            _context.Tests.Remove(test);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TestExists(string id)
         {
-            return _context.Test.Any(e => e.Id == id);
+            return _context.Tests.Any(e => e.Id == id);
         }
     }
 }

@@ -10,7 +10,7 @@ using WebCourses.Data;
 namespace WebCourses.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200104023610_CreateTestTableWithCourseOneToManyRelation")]
+    [Migration("20200104144201_CreateTestTableWithCourseOneToManyRelation")]
     partial class CreateTestTableWithCourseOneToManyRelation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -243,7 +243,7 @@ namespace WebCourses.Data.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Test");
+                    b.ToTable("Tests");
                 });
 
             modelBuilder.Entity("WebCourses.Models.User", b =>
