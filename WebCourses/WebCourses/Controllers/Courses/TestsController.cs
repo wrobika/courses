@@ -70,21 +70,24 @@ namespace WebCourses.Controllers.Courses
             {
                 _context.Tests.Add(test);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { courseId = courseId });
+                return RedirectToAction(nameof(Edit), new { courseId = courseId, testId = test.Id });
             }
             ViewData["CourseId"] = courseId;
             return View(test);
         }
 
         // GET: Tests/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        [Route("/Courses/{courseId}/Tests/Edit/{testId}")]
+        public async Task<IActionResult> Edit(string courseId, string testId)
         {
-            if (id == null)
+            if (courseId == null || testId == null)
             {
                 return NotFound();
             }
 
-            var test = await _context.Tests.FindAsync(id);
+            var test = await _context.Tests
+                .Include(t => t.Questions)
+                .FirstAsync(t => t.Id == testId);
             if (test == null)
             {
                 return NotFound();

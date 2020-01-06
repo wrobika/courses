@@ -16,6 +16,10 @@ namespace WebCourses.Data
 
         public virtual DbSet<Test> Tests { get; set; }
 
+        public virtual DbSet<Question> Questions { get; set; }
+
+        public virtual DbSet<Answer> Answers { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -47,6 +51,16 @@ namespace WebCourses.Data
                 .HasOne<Course>(t => t.Course)
                 .WithMany(c => c.Tests)
                 .HasForeignKey(t => t.CourseId);
+
+            modelBuilder.Entity<Question>()
+                .HasOne<Test>(t => t.Test)
+                .WithMany(q => q.Questions)
+                .HasForeignKey(t => t.TestId);
+
+            modelBuilder.Entity<Answer>()
+                .HasOne<Question>(q => q.Question)
+                .WithMany(a => a.Answers)
+                .HasForeignKey(q => q.QuestionId);
         }
     }
 }

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<WebCourses.Models.Question>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Test)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AnswersCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CorrectAnswersCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Test.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnswersCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CorrectAnswersCount)
+            </td>
+            <td>
+                <a asp-action="Edit"  asp-controller="Questions" asp-route-questionId="@item.Id" asp-route-courseId ="@ViewContext.RouteData.Values["courseId"]" asp-route-testId="@ViewContext.RouteData.Values["testId"]">Edit-</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete-</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

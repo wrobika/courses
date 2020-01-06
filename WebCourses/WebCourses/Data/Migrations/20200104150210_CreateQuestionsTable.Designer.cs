@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebCourses.Data;
 
 namespace WebCourses.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200104150210_CreateQuestionsTable")]
+    partial class CreateQuestionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,24 +191,6 @@ namespace WebCourses.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("WebCourses.Models.Answer", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Content");
-
-                    b.Property<bool>("Correct");
-
-                    b.Property<string>("QuestionId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("Answers");
-                });
-
             modelBuilder.Entity("WebCourses.Models.Course", b =>
                 {
                     b.Property<string>("Id")
@@ -269,13 +253,13 @@ namespace WebCourses.Data.Migrations
 
                     b.Property<string>("CourseId");
 
-                    b.Property<DateTime?>("Deadline");
+                    b.Property<DateTime>("Deadline");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
 
-                    b.Property<DateTime?>("ReleaseDate");
+                    b.Property<DateTime>("ReleaseDate");
 
                     b.HasKey("Id");
 
@@ -337,13 +321,6 @@ namespace WebCourses.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WebCourses.Models.Answer", b =>
-                {
-                    b.HasOne("WebCourses.Models.Question", "Question")
-                        .WithMany("Answers")
-                        .HasForeignKey("QuestionId");
                 });
 
             modelBuilder.Entity("WebCourses.Models.Course", b =>

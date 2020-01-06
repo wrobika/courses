@@ -17,12 +17,14 @@ namespace WebCourses.Models
 
         public string Description { get; set; }
 
-        public DateTime ReleaseDate { get; set; } //data udostepnienia
+        public DateTime? ReleaseDate { get; set; } //data udostepnienia
 
-        public DateTime Deadline { get; set; } //data deadlinu
+        public DateTime? Deadline { get; set; } //data deadlinu
 
         public string CourseId { get; set; }
 
         public Course Course { get; set; }
+
+        public IList<Question> Questions { get; set; }
     }
 }

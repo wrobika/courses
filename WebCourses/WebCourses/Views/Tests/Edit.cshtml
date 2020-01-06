@@ -5,9 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
-
-<h4>Test</h4>
+<h2>Edit Test</h2>
+<h4> View to edit test and add questions. Tutaj dodajemy pytania.</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -50,6 +49,22 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+@if (Model.Questions.Any())
+{
+    <p>Click to edit question:</p> 
+}
+@await Html.PartialAsync("_QuestionsList", Model.Questions)
+@*@foreach (var question in Model.Questions) {
+    @switch (question.Type)
+    {
+        case Question.QuestionType.SingleAnswer:
+        case Question.QuestionType.MultipleAnswer:
+        <p> ToDo: Tutaj powinno być wyświetlane pytanie wraz z odpowiedziami </p>
+            break;
+
+    }
+}*@
+<a asp-action="Index" asp-controller="Questions" asp-route-courseId="@Model.CourseId" asp-route-testId="@Model.Id">Create question</a>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -1,0 +1,85 @@
+﻿@using WebCourses.ViewModels
+@model ChooseQuestionTypeViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using WebCourses.Models
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create question</h2>
+@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
+{
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="bg-primary text-white">
+                    <div class="panel-heading">Choose question type:</div>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" method="post" action=@Url.Action("Choose","Questions", new { courseId = ViewContext.RouteData.Values["courseId"], testId = ViewContext.RouteData.Values["testId"]})>
+                        <select class="form-control" asp-for="QuestionType" asp-items="@ViewBag.QuestionTypes"></select>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary"> Create question</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+     </div>
+}
+        @*<p>
+                <a asp-action="Create">Create New</a>
+            </p>*@
+        @*<table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Test)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Content)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Type)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AnswersCount)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CorrectAnswersCount)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+            @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Test.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Content)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AnswersCount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CorrectAnswersCount)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+            }
+                </tbody>
+            </table>*@

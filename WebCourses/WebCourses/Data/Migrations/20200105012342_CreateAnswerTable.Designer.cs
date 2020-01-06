@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebCourses.Data;
 
 namespace WebCourses.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200105012342_CreateAnswerTable")]
+    partial class CreateAnswerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,13 +271,13 @@ namespace WebCourses.Data.Migrations
 
                     b.Property<string>("CourseId");
 
-                    b.Property<DateTime?>("Deadline");
+                    b.Property<DateTime>("Deadline");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
 
-                    b.Property<DateTime?>("ReleaseDate");
+                    b.Property<DateTime>("ReleaseDate");
 
                     b.HasKey("Id");
 
