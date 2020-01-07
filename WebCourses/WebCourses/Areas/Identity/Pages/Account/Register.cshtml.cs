@@ -55,7 +55,12 @@ namespace WebCourses.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [BindProperty, Required]
+            public string Role { get; set; } = "Student";
         }
+
+        public string[] Roles = new[] { "Teacher", "Student" };
 
         public void OnGet(string returnUrl = null)
         {
@@ -71,6 +76,8 @@ namespace WebCourses.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    var newUserRole = await _userManager.AddToRoleAsync(user, Input.Role);
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
