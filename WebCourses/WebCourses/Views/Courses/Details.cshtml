@@ -81,10 +81,18 @@
         <strong>Available tests: </strong>
         @foreach (var test in Model.Tests)
         {
-            <li>
-                <strong>@test.Name</strong>
-                <a asp-action="Details" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Details</a>
-            </li>
+            var today = DateTime.Now.ToLocalTime();
+            var deadline = test.Deadline.HasValue ? test.Deadline.Value : DateTime.MaxValue;
+            var release = test.ReleaseDate.HasValue ? test.ReleaseDate.Value : DateTime.MaxValue;
+            if (deadline > today && release < today)
+            {
+                <p> Current time: @today   Deadline: @deadline   Release: @release</p>
+                <li>
+                    <strong>@test.Name</strong>
+                    <a asp-action="Details" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Details</a>
+                </li>
+            }
+
         }
     }
 }

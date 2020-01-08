@@ -101,9 +101,10 @@ namespace WebCourses.Controllers.Courses
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description,ReleaseDate,Deadline,CourseId")] Test test)
+        [Route("/Courses/{courseId}/Tests/Edit/{testId}")]
+        public async Task<IActionResult> Edit(string testId, [Bind("Id,Name,Description,ReleaseDate,Deadline,CourseId")] Test test, string courseId)
         {
-            if (id != test.Id)
+            if (testId != test.Id)
             {
                 return NotFound();
             }
