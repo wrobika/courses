@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace WebCourses.Models
         public IList<CourseUser> CourseUsers { get; set; }
 
         public string UserId { get; set; }
+
+        [DisplayName("Teacher")]
         public User User { get; set; }
 
         public IList<Test> Tests { get; set; }

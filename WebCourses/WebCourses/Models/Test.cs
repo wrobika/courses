@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,8 +18,10 @@ namespace WebCourses.Models
 
         public string Description { get; set; }
 
+        [DisplayName("Release Date")]
         public DateTime? ReleaseDate { get; set; } //data udostepnienia
 
+        [DisplayName("Deadline Date")]
         public DateTime? Deadline { get; set; } //data deadlinu
 
         public string CourseId { get; set; }

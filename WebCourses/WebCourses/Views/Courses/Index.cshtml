@@ -8,49 +8,36 @@
     ViewData["Title"] = "Your courses";
 }
 
-<h2>Your courses </h2>
-@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
-{
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-}
+    <h2>Courses</h2>
 
-@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Student"))
-{
-    <p>
-        <a asp-action="Apply">Apply for...</a>
-    </p>
-}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+    <div class="panel-body">
+        @foreach (var course in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+            <div class="list-group">
+                <a asp-action="Details" asp-route-id="@course.Id" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><b>@course.Title</b></h5>
+                    </div>
+                    <p class="text-primary text-nowrap">@course.Description</p>
+                </a>
+            </div>
         }
-    </tbody>
-</table>
+
+        @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
+        {
+            <a asp-action="Create" class="btn btn-primary pull-right" role="button">
+                Create new...
+            </a>
+        }
+
+        @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Student"))
+        {
+            <a asp-action="Apply" class="btn btn-primary pull-right" role="button">
+                Apply for...
+            </a>
+        }
+    </div>
+
+
+

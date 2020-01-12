@@ -9,45 +9,183 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h2>Statistics of a test</h2><br />
 
-<div>
-    <h4>Test</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ReleaseDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ReleaseDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Deadline)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Deadline)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Course)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Course.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
+{
+    <div>
+        <h4>@Html.DisplayFor(model => model.Name)</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            @*<dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>*@
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ReleaseDate)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Deadline)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Deadline)
+            </dd>
+        </dl>
+        Tutaj powinnam dodać jeszcze edycję testu, tzn. dat plus możliwość udostępniania
+    </div>
+
+}
+@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Student"))
+{
+    var today = DateTime.Now.ToLocalTime();
+    var release = Model.ReleaseDate;
+    var deadline = Model.Deadline;
+    if (deadline > today & release < today)
+    {
+        <p>Werka sprawdź szczegóły w kodzie!!!! Views/Tests/Details</p>
+        @*@if (DB::table('user_points')->where('user_id', Auth::id())->where('test_id', $test->id)->value('finished') == false)
+                You can only attempt this test once. <br>
+                            Are you sure you want to do this right now? <br>
+                <a href="{{route('courses.tests.solve', [$course,$test,1])}}">Solve Now!</a>
+                @else
+                Already solved.
+                            @endif
+            }*@
+    }
+}
+
+@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
+{
+    <br /><br />
+    <h5><b>Checking answers for open questions: Tutaj dodaj Werka sprawdzanie odpowiedzi otwartych. Szczegóły w kodzie!!!!!!!!</b></h5>
+    @*@if (Auth::user()->identity == "teacher")
+        Tak było:
+                            </br></br>
+                            <h5><b>Checking answers for open questions:</b></h5>
+                            @foreach($test->questions as $question)
+                                @if($question['question_type'] == 'open')
+                                    <ul class="list-group">
+                                        @foreach($question->open_questions as $answer)
+                                            @if(isset($answer['is_correct']) == false)
+                                                <strong>{{ $question['content'] }}</strong>
+                                                <li class="list-group-item"> {{$answer['long_answer']}}
+                                                <form class="form-inline" method="post" action="{{ route('courses.tests.checkOpenQuestion', [$course, $test]) }}">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" value="{{$answer->id}}" name="answer_id">
+                                                    <input type="hidden" value="{{$question->id}}" name="question_id">
+                                                    <select class="form-control" name="is_correct">
+                                                        <option value="true">Correct</option>
+                                                        <option value="false">Incorrect</option>
+                                                    </select>
+                                                    <button type="submit" class="btn btn-primary align-right">
+                                                        Press
+                                                    </button>
+                                                </form>
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                            @endforeach
+                            <h5><b>Showing question statistics:</b></h5>
+                            @foreach($test->questions as $question)
+                                    <h4 class="pull-right text-primary">{{ $question['content'] }} </h4>
+
+                                    <u class="text-primary"><i>Statystyki:</i></u> <br>
+                                    <i >
+                                        Wszystkich odpowiedzi:
+                                        {{DB::table('question_stats')->where('question_id', $question->id)->value('correct') +
+                                        DB::table('question_stats')->where('question_id', $question->id)->value('incorrect')}}
+                                        <br>
+                                        Poprawnych: {{DB::table('question_stats')->where('question_id', $question->id)->value('correct')}} <br>
+                                        Błędnych: {{DB::table('question_stats')->where('question_id', $question->id)->value('incorrect')}}
+                                    </i>
+                                        <br>
+                                        <br>
+                                @if($question['question_type'] == 'open')
+
+                                    @foreach($question->open_questions as $answer)
+                                        <h4>Odpowiedzi: </h4>
+                                        @if(isset($answer['is_correct']))
+                                            <li class="list-group-item"> {{$answer['long_answer']}}</li>
+                                        @endif
+                                    @endforeach
+
+                                    <h5>Poprawne to:</h5>
+                                    <ul class="list-group">
+                                        @foreach($question->open_questions as $poprawne)
+                                            @if(isset($poprawne['is_correct']))
+                                                @if($poprawne['is_correct'] == 1)
+                                                    <li class="list-group-item"> {{$poprawne['long_answer']}}</li>
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    </ul>
+
+                                    <br>
+
+
+                                    @endif
+                            @endforeach
+                            </br>
+                            <br>
+                            <a href="{{ route('courses.tests.edit', [$course,$test]) }}" class="btn btn-primary pull-right ">Edit test...</a>
+
+                            <a href="{{route('courses.show',[$course,$test])}}"> Come back to course </a>
+                        @endif*@
+    <br />
+    <br />
+    <a asp-action="Edit" asp-controller="Tests" asp-route-testId="@Model.Id" asp-route-courseId="@Model.CourseId" class="btn btn-primary pull-right">Edit test</a>
+    <a asp-action= "Index"> Come back to course</a>
+}
+@*<div>
+        <h4>Test</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ReleaseDate)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Deadline)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Deadline)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Course)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Course.Id)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>*@

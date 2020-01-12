@@ -26,13 +26,16 @@ namespace WebCourses.Controllers
         }
 
         // GET: Courses
+        // Show user courses for student and created courses for teacher
         public async Task<IActionResult> Index()
         {
             var courses = new List<Course>();
             User currentUser = await _userManager.GetUserAsync(User);
             if (await _userManager.IsInRoleAsync(currentUser, "Teacher"))
             {
-                courses = await _context.Courses.Where(c => c.UserId == currentUser.Id).ToListAsync();
+                courses = await _context.Courses
+                    .Where(c => c.UserId == currentUser.Id)
+                    .ToListAsync();
             }
             else if (await _userManager.IsInRoleAsync(currentUser, "Student"))
             {
@@ -114,6 +117,7 @@ namespace WebCourses.Controllers
                 .Include(c => c.CourseUsers)
                     .ThenInclude(cu => cu.User)
                 .Include(c => c.Tests)
+                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (course == null)
             {

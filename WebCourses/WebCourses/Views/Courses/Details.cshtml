@@ -8,16 +8,17 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>Details</h2><br />
+
 <div>
-    <h4>Course</h4>
+    <h4>@Html.DisplayFor(model => model.Title)</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.User)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.User.Email)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Description)
@@ -27,47 +28,49 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@*<div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>*@
 @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
 {
-    <br> <strong>Students: </strong>
-    <ul>
+    <br>
+    <h5><b>Students:</b> </h5>
+    <ul class="list-group">
         @foreach (var courseUser in @Model.CourseUsers)
         {
             @if (courseUser.Confirmed == true)
             {
-                <li>
-                    <strong>@courseUser.User.Email</strong>
-                </li>
+                <a asp-action="Details" asp-controller="Students" asp-route-courseId="@Model.Id" asp-route-studentId="@courseUser.UserId" class="list-group-item list-group-item-action flex-column align-items-start">
+                    @courseUser.User.Email
+                </a>
             }
         }
     </ul>
 
-    <br> <strong>Not confirmed students: </strong>
-    <ul>
-        @foreach (var courseUser in @Model.CourseUsers)
+    <h5><b>Not confirmed students: </b></h5>
+    @foreach (var courseUser in @Model.CourseUsers)
+    {
+        @if (courseUser.Confirmed == false)
         {
-            @if (courseUser.Confirmed == false)
-            {
-                <li>
-                    <strong>@courseUser.User.Email</strong>
-                    <form class="form-horizontal" method="post" action="/Courses/Confirm">
-                        <input type="hidden" value="@Model.Id" name="courseId" />
-                        <input type="hidden" value="@courseUser.UserId" name="userId" />
-                        <select class="col-md-4 control-label" name="confirmation">
-                            <option value="false">Reject</option>
-                            <option value="true">Confirm</option>
-                        </select>
-                        <input type="submit" value="Press" />
-                    </form>
-                </li>
-            }
+            <form class="form-inline" method="post" action="/Courses/Confirm">
+                <input type="hidden" value="@Model.Id" name="courseId" />
+                <input type="hidden" value="@courseUser.UserId" name="userId" />
+                <label class="mr-sm-2 text-primary" for="confirmation">@courseUser.User.Email</label>
+                <select id="confirmation" class="form-control" name="confirmation">
+                    <option value="false">Reject</option>
+                    <option value="true">Confirm</option>
+                </select>
+                <button type="submit" class="btn btn-primary align-right">
+                    Press
+                </button>
+            </form>
+            <br />
         }
-    </ul>
-    <a asp-action="Index" asp-controller="Tests" asp-route-courseId="@Model.Id">Manage tests</a>
+    }
+    <a asp-action="Index" asp-controller="Tests" asp-route-courseId="@Model.Id" class="btn btn-primary pull-right">Manage tests</a>
+    <br />
+
 }
 
 @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Student"))
@@ -86,10 +89,14 @@
             var release = test.ReleaseDate.HasValue ? test.ReleaseDate.Value : DateTime.MaxValue;
             if (deadline > today && release < today)
             {
-                <p> Current time: @today   Deadline: @deadline   Release: @release</p>
                 <li>
                     <strong>@test.Name</strong>
-                    <a asp-action="Details" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Details</a>
+                    @*@if (DB::table('user_points')->where('user_id', Auth::id())->where('test_id', $test->id)->value('finished') == true)
+                     Points: { { DB::table('user_points')->where('user_id', Auth::id())->where('test_id', $test->id)->value('points')} }
+                    / { {$test->questions()->count()} }
+                    @else*@
+                    <a asp-action="Details" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Solve - WERKA ZERKNIJ DO KODU!!!! Views/Courses/Details tam masz, że powinny być wyświetlane punkty, jeśli rozwiązane</a>
+                    @*@endif*@
                 </li>
             }
 
