@@ -1,41 +1,17 @@
 ﻿@model IEnumerable<WebCourses.Models.Answer>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Question)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Correct)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Question.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Correct)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+
+@foreach (var answer in Model) {
+    <div class="list-group ">
+        <a asp-action="Edit" asp-controller="Answers" asp-route-answerId="@answer.Id" asp-route-courseId="@ViewContext.RouteData.Values["courseId"]" asp-route-testId="@ViewContext.RouteData.Values["testId"]" asp-route-questionId="@ViewContext.RouteData.Values["questionId"]" class="list-group-item list-group-item-action flex-column align-items-start">
+            @if (answer.Correct)
+            {
+                <p class="text-success "><strong>@answer.Content</strong></p>
+            }
+            else
+            {
+                <p class="text-primary"><strong>@answer.Content</strong></p>
+            }
+        </a>
+    </div>
 }
-    </tbody>
-</table>

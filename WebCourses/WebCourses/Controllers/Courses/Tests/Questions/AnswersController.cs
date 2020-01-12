@@ -52,8 +52,11 @@ namespace WebCourses.Controllers.Courses.Tests.Questions
             var questionType = await _context.Questions
                 .Where(q => q.Id == questionId)
                 .Select(q => q.Type).FirstAsync();
-
+            var correctAnswerCount = await _context.Answers
+                .Where(a => a.QuestionId == questionId)
+                .CountAsync(a => a.Correct == true);
             ViewBag.QuestionType = questionType;
+            ViewBag.CorrectAnswerCount = correctAnswerCount;
             return View();
         }
 
@@ -67,7 +70,13 @@ namespace WebCourses.Controllers.Courses.Tests.Questions
         {
             if (ModelState.IsValid)
             {
+                var question = await _context.Questions.FindAsync(questionId);
                 _context.Answers.Add(answer);
+                question.AnswersCount++;
+                if (answer.Correct) {
+                    question.CorrectAnswersCount++;
+                }
+                _context.Questions.Update(question);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Edit", "Questions", new { courseId = courseId, testId = testId, questionId = questionId });
             }
@@ -76,14 +85,15 @@ namespace WebCourses.Controllers.Courses.Tests.Questions
         }
 
         // GET: Answers/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        [Route("/Courses/{courseId}/Tests/{testId}/Questions/{questionId}/Edit/{answerId}")]
+        public async Task<IActionResult> Edit(string courseId, string testId, string questionId, string answerId)
         {
-            if (id == null)
+            if (answerId == null)
             {
                 return NotFound();
             }
 
-            var answer = await _context.Answers.FindAsync(id);
+            var answer = await _context.Answers.FindAsync(answerId);
             if (answer == null)
             {
                 return NotFound();

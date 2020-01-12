@@ -87,6 +87,7 @@ namespace WebCourses.Controllers.Courses
 
             var test = await _context.Tests
                 .Include(t => t.Questions)
+                .ThenInclude(q => q.Answers)
                 .FirstAsync(t => t.Id == testId);
             if (test == null)
             {

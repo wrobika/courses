@@ -14,8 +14,7 @@ namespace WebCourses.Models
         {
             SingleAnswer,
             MultipleAnswer,
-            Open,
-            Categorization
+            Open
         }
 
         [Key]

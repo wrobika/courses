@@ -26,7 +26,20 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="Correct" /> @Html.DisplayNameFor(model => model.Correct)
+                            @if (ViewBag.CorrectAnswerCount == 0 && ViewBag.QuestionType == Question.QuestionType.SingleAnswer)
+                            {
+                                <p>First, create correct answer</p>
+                                <input asp-for="Correct" type="hidden" value="true" />
+                            }
+                            else if (ViewBag.QuestionType == Question.QuestionType.SingleAnswer && ViewBag.CorrectAnswerCount > 0)
+                            {
+                                <p>Create incorrect answer</p>
+                                <input asp-for="Correct" type="hidden" value="false" />
+                            }
+                            else
+                            {
+                                <input asp-for="Correct" /> @Html.DisplayNameFor(model => model.Correct)
+                            }
                         </label>
                     </div>
                 </div>

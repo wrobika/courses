@@ -1,49 +1,42 @@
 ﻿@model IEnumerable<WebCourses.Models.Question>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Test)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AnswersCount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CorrectAnswersCount)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Test.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AnswersCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CorrectAnswersCount)
-            </td>
-            <td>
-                <a asp-action="Edit"  asp-controller="Questions" asp-route-questionId="@item.Id" asp-route-courseId ="@ViewContext.RouteData.Values["courseId"]" asp-route-testId="@ViewContext.RouteData.Values["testId"]">Edit-</a>
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete-</a>
-            </td>
-        </tr>
+@foreach (var question in Model)
+{
+
+    @switch (question.Type)
+    {
+        case (Question.QuestionType.SingleAnswer):
+        case (Question.QuestionType.MultipleAnswer):
+            <div class="list-group">
+                <a asp-action="Edit" asp-controller="Questions" asp-route-questionId="@question.Id" asp-route-courseId="@ViewContext.RouteData.Values["courseId"]" asp-route-testId="@ViewContext.RouteData.Values["testId"]" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><b>@Html.DisplayFor(q => question.Content)</b></h5>
+                        <p align="right" class="text-primary">@Html.DisplayFor(q => question.Type)</p>
+                    </div>
+                    @foreach (var answer in question.Answers)
+                    {
+                        @if (answer.Correct)
+                        {
+                            <p class="text-success "><strong>@answer.Content</strong></p>
+                        }
+                        else
+                        {
+                            <p class="text-primary"><strong>@answer.Content</strong></p>
+                        }
+                    }
+                </a>
+            </div>
+            break;
+        case (Question.QuestionType.Open):
+            <div class="list-group">
+                <a asp-action="Edit" asp-controller="Questions" asp-route-questionId="@question.Id" asp-route-courseId="@ViewContext.RouteData.Values["courseId"]" asp-route-testId="@ViewContext.RouteData.Values["testId"]" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><b>@Html.DisplayFor(q => question.Content)</b></h5>
+                        <p align="right" class="text-primary">@Html.DisplayFor(q => question.Type)</p>
+                    </div>
+                </a>
+            </div>
+            break;
+
+    }
 }
-    </tbody>
-</table>
