@@ -1,0 +1,20 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<p> zerknij w kod Views/Students/Details</p>
+
+@*@if (Auth::user()->identity == "teacher")
+                            <h4><strong>Student:</strong>
+                                {{DB::table('users')->where('id', $id)->value('name')}}</h4> <br>
+                            <h3><strong>Tests:</strong></h3> <br>
+                        @foreach($course->tests as $test)
+                                <strong>{{$test->name}} </strong>
+                                <p class="text-primary">@if(DB::table('user_points')->where('user_id', $id)->where('test_id', $test->id)->value('finished') == true)
+                                    Score: {{DB::table('user_points')->where('user_id', $id)->where('test_id', $test->id)->value('points')}}
+                                    / {{$test->questions()->count()}} <br>
+                                @else
+                                    <i>Not solved</i> <br>
+                                    @endif</p>
+                        @endforeach
+@endif*@

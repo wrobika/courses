@@ -135,16 +135,17 @@ namespace WebCourses.Controllers.Courses
         }
 
         // GET: Tests/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        [Route("/Courses/{courseId}/Tests/Delete/{testId}")]
+        public async Task<IActionResult> Delete(string courseId, string testId)
         {
-            if (id == null)
+            if (testId == null)
             {
                 return NotFound();
             }
 
             var test = await _context.Tests
                 .Include(t => t.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == testId);
             if (test == null)
             {
                 return NotFound();
