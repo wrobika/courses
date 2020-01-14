@@ -29,5 +29,7 @@ namespace WebCourses.Models
         public Course Course { get; set; }
 
         public IList<Question> Questions { get; set; }
+
+        public IList<UserTestResult> UserTestResults { get; set; }
     }
 }

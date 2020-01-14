@@ -11,5 +11,9 @@ namespace WebCourses.Models
         public IList<CourseUser> CourseUsers { get; set; }
 
         public IList<Course> Courses { get; set; }
+
+        public IList<UserTestResult> UserTestResults { get; set; }
+
+        public IList<OpenQuestionAnswer> OpenQuestionAnswers { get; set; }
     }
 }

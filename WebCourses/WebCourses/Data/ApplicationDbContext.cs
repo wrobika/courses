@@ -20,6 +20,10 @@ namespace WebCourses.Data
 
         public virtual DbSet<Answer> Answers { get; set; }
 
+        public virtual DbSet<UserTestResult> UserTestResults { get; set; }
+
+        public virtual DbSet<OpenQuestionAnswer> OpenQuestionAnswers { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -61,6 +65,26 @@ namespace WebCourses.Data
                 .HasOne<Question>(q => q.Question)
                 .WithMany(a => a.Answers)
                 .HasForeignKey(q => q.QuestionId);
+          
+            modelBuilder.Entity<UserTestResult>()
+                .HasOne<User>(utr => utr.User)
+                .WithMany(u => u.UserTestResults)
+                .HasForeignKey(utr => utr.UserId);
+
+            modelBuilder.Entity<UserTestResult>()
+                .HasOne<Test>(utr => utr.Test)
+                .WithMany(t => t.UserTestResults)
+                .HasForeignKey(utr => utr.TestId);
+
+            modelBuilder.Entity<OpenQuestionAnswer>()
+                .HasOne<User>(oqa => oqa.User)
+                .WithMany(u => u.OpenQuestionAnswers)
+                .HasForeignKey(oqa => oqa.UserId);
+
+            modelBuilder.Entity<OpenQuestionAnswer>()
+                .HasOne<Question>(oqa => oqa.Question)
+                .WithMany(q => q.OpenQuestionAnswers)
+                .HasForeignKey(oqa => oqa.QuestionId);
         }
     }
 }

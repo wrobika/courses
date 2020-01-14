@@ -36,5 +36,7 @@ namespace WebCourses.Models
         public int CorrectAnswersCount { get; set; }
 
         public IList<Answer> Answers { get; set; }
+
+        public IList<OpenQuestionAnswer> OpenQuestionAnswers { get; set; }
     }
 }
