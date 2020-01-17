@@ -1,0 +1,98 @@
+﻿@model WebCourses.ViewModels.TestViewModel
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "Solve";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Solve</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Student"))
+        {
+        <form asp-action="Check" asp-controller="Tests" asp-route-courseId="@Model.CourseId" asp-route-testId="@Model.TestId">
+            @Html.HiddenFor(model => Model.TestId)
+            @Html.HiddenFor(model => Model.CourseId)
+
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                var question = Model.Questions[i];
+                @Html.HiddenFor(model => Model.Questions[i].QuestionId)
+                @Html.HiddenFor(model => Model.Questions[i].TestId)
+                @Html.HiddenFor(model => Model.Questions[i].Type)
+                @Html.HiddenFor(model => Model.Questions[i].Content)
+                @for (int j = 0; j < Model.Questions[i].Answers.Count; j++)
+                {
+                    @Html.HiddenFor(model => Model.Questions[i].Answers[j].AnswerId)
+                    @Html.HiddenFor(model => Model.Questions[i].Answers[j].Content)
+                    @Html.HiddenFor(model => Model.Questions[i].Answers[j].Correct)
+                }
+
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><b>@Html.DisplayFor(q => question.Content)</b></h5>
+                            <p align="right" class="text-primary">@Html.DisplayFor(q => question.Type)</p>
+                            @switch (question.Type)
+                            {
+                                case (Question.QuestionType.SingleAnswer):
+                                    @for (int j = 0; j < question.Answers.Count; j++)
+                                    {
+                                        var answer = question.Answers[j];
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    @Html.RadioButtonFor(model => model.Questions[i].SelectedAnswerId, answer.AnswerId)
+                                                    <Strong>@answer.Content</Strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                    break;
+
+                                case (Question.QuestionType.MultipleAnswer):
+                                    @for (int j = 0; j < question.Answers.Count; j++)
+                                    {
+                                        var answer = question.Answers[j];
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    @Html.CheckBoxFor(model => model.Questions[i].Answers[j].Selected)
+                                                    <Strong>@answer.Content</Strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                    break;
+
+                                case (Question.QuestionType.Open):
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(model => model.Questions[i].OpenAnswer, new { @class = "form-control" })
+                                    </div>
+                                    break;
+                            }
+                        </div>
+                    </a>
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Check" class="btn btn-default" />
+            </div>
+        </form>
+        }
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

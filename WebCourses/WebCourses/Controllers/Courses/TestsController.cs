@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebCourses.Data;
 using WebCourses.Models;
+using WebCourses.ViewModels;
 
 namespace WebCourses.Controllers.Courses
 {
@@ -168,6 +169,84 @@ namespace WebCourses.Controllers.Courses
         private bool TestExists(string id)
         {
             return _context.Tests.Any(e => e.Id == id);
+        }
+
+        // GET: Tests/Solve/5
+        [Route("/Courses/{courseId}/Tests/Solve/{testId}")]
+        public async Task<IActionResult> Solve(string courseId, string testId)
+        {
+            if (courseId == null || testId == null)
+            {
+                return NotFound();
+            }
+
+            var test = await _context.Tests
+                .Include(t => t.Questions)
+                .ThenInclude(q => q.Answers)
+                .FirstAsync(t => t.Id == testId);
+            if (test == null)
+            {
+                return NotFound();
+            }
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", test.CourseId);
+            TestViewModel testViewModel = new TestViewModel
+            {
+                TestId = test.Id,
+                CourseId = test.CourseId,
+                Questions = new List<QuestionViewModel>()
+            };
+            foreach(var question in test.Questions)
+            {
+                QuestionViewModel questionViewModel = new QuestionViewModel
+                {
+                    QuestionId = question.Id,
+                    TestId = question.TestId,
+                    Content = question.Content,
+                    Type = question.Type,
+                    Answers = new List<AnswerViewModel>()
+                };
+                foreach(var answer in question.Answers)
+                {
+                    AnswerViewModel answerViewModel = new AnswerViewModel
+                    {
+                        AnswerId = answer.Id,
+                        Content = answer.Content,
+                        Selected = false,
+                        Correct = answer.Correct
+                    };
+                    questionViewModel.Answers.Add(answerViewModel);
+                }
+                testViewModel.Questions.Add(questionViewModel);
+            }
+            return View(testViewModel);
+        }
+
+        public async Task<int> Check([Bind("TestId,CourseId,Questions")] TestViewModel testViewModel, string courseId, string testId)
+        {
+            int countCorrect = 0;
+            foreach (var question in testViewModel.Questions)
+            {
+                switch(question.Type)
+                {
+                    case Question.QuestionType.SingleAnswer:
+                        int i = 0;
+                        while (!question.Answers[i].Correct) i++;
+                        if (question.SelectedAnswerId == question.Answers[i].AnswerId)
+                            countCorrect++;
+                        break;
+                    case Question.QuestionType.MultipleAnswer:
+                        foreach (var answer in question.Answers)
+                        {
+                            if (answer.Correct && answer.Selected)
+                                countCorrect++;
+                        }
+                        break;
+                    case Question.QuestionType.Open:
+                        break;
+                    default: break;
+                }
+            }
+            return countCorrect;
         }
     }
 }

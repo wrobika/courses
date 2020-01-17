@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebCourses.Models;
+using WebCourses.ViewModels;
 
 namespace WebCourses.Data
 {
@@ -86,5 +87,9 @@ namespace WebCourses.Data
                 .WithMany(q => q.OpenQuestionAnswers)
                 .HasForeignKey(oqa => oqa.QuestionId);
         }
+
+        public DbSet<AnswerViewModel> AnswerViewModel { get; set; }
+
+        public DbSet<QuestionViewModel> QuestionViewModel { get; set; }
     }
 }

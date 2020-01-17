@@ -95,7 +95,7 @@
                      Points: { { DB::table('user_points')->where('user_id', Auth::id())->where('test_id', $test->id)->value('points')} }
                     / { {$test->questions()->count()} }
                     @else*@
-                    <a asp-action="Details" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Solve - WERKA ZERKNIJ DO KODU!!!! Views/Courses/Details tam masz, że powinny być wyświetlane punkty, jeśli rozwiązane</a>
+                    <a asp-action="Solve" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Solve - WERKA ZERKNIJ DO KODU!!!! Views/Courses/Details tam masz, że powinny być wyświetlane punkty, jeśli rozwiązane</a>
                     @*@endif*@
                 </li>
             }
