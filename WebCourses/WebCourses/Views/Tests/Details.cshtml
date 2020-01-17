@@ -1,8 +1,10 @@
 ﻿@model WebCourses.Models.Test
 @using Microsoft.AspNetCore.Identity
+@using WebCourses.Data;
 
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+@inject ApplicationDbContext _context
 
 @{
     ViewData["Title"] = "Details";
@@ -68,36 +70,37 @@
 @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
 {
     <br /><br />
-    <h5><b>Checking answers for open questions: Tutaj dodaj Werka sprawdzanie odpowiedzi otwartych. Szczegóły w kodzie!!!!!!!!</b></h5>
+    <hr />
+    <h5><b>Checking answers for open questions:</b></h5>
+    @foreach (var question in Model.Questions)
+    {
+        @if (question.Type == Question.QuestionType.Open)
+        {
+            var openAnswers = _context.OpenQuestionAnswers
+                .Where(answer => answer.QuestionId == question.Id);
+            <div class="list-group">
+                @foreach (var answer in openAnswers)
+                {
+                    @if (!answer.Checked)
+                    {
+                        <strong>@question.Content</strong>
+                        <div class="list-group-item">
+                            @answer.Content
+                            <a asp-action="MarkIncorrect" asp-controller="OpenQuestionAnswers" asp-route-courseId="@Model.CourseId" asp-route-testId="@Model.Id" asp-route-answerId="@answer.Id" class="btn btn-danger pull-right" role="button">
+                                Incorrect
+                            </a>
+                            <a asp-action="MarkCorrect" asp-controller="OpenQuestionAnswers" asp-route-courseId="@Model.CourseId" asp-route-testId="@Model.Id" asp-route-answerId="@answer.Id" class="btn btn-success pull-right" role="button">
+                                Correct
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    }
+
     @*@if (Auth::user()->identity == "teacher")
         Tak było:
-                            </br></br>
-                            <h5><b>Checking answers for open questions:</b></h5>
-                            @foreach($test->questions as $question)
-                                @if($question['question_type'] == 'open')
-                                    <ul class="list-group">
-                                        @foreach($question->open_questions as $answer)
-                                            @if(isset($answer['is_correct']) == false)
-                                                <strong>{{ $question['content'] }}</strong>
-                                                <li class="list-group-item"> {{$answer['long_answer']}}
-                                                <form class="form-inline" method="post" action="{{ route('courses.tests.checkOpenQuestion', [$course, $test]) }}">
-                                                    {{ csrf_field() }}
-                                                    <input type="hidden" value="{{$answer->id}}" name="answer_id">
-                                                    <input type="hidden" value="{{$question->id}}" name="question_id">
-                                                    <select class="form-control" name="is_correct">
-                                                        <option value="true">Correct</option>
-                                                        <option value="false">Incorrect</option>
-                                                    </select>
-                                                    <button type="submit" class="btn btn-primary align-right">
-                                                        Press
-                                                    </button>
-                                                </form>
-                                                </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                    @endif
-                            @endforeach
                             <h5><b>Showing question statistics:</b></h5>
                             @foreach($test->questions as $question)
                                     <h4 class="pull-right text-primary">{{ $question['content'] }} </h4>
@@ -147,7 +150,7 @@
     <br />
     <br />
     <a asp-action="Edit" asp-controller="Tests" asp-route-testId="@Model.Id" asp-route-courseId="@Model.CourseId" class="btn btn-primary pull-right">Edit test</a>
-    <a asp-action= "Index"> Come back to course</a>
+    <a asp-action="Index"> Come back to course</a>
 }
 @*<div>
         <h4>Test</h4>

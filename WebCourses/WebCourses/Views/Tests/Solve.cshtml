@@ -24,7 +24,6 @@
             {
                 var question = Model.Questions[i];
                 @Html.HiddenFor(model => Model.Questions[i].QuestionId)
-                @Html.HiddenFor(model => Model.Questions[i].TestId)
                 @Html.HiddenFor(model => Model.Questions[i].Type)
                 @Html.HiddenFor(model => Model.Questions[i].Content)
                 @for (int j = 0; j < Model.Questions[i].Answers.Count; j++)

@@ -1,8 +1,10 @@
 ﻿@model WebCourses.Models.Course
 @using Microsoft.AspNetCore.Identity
+@using WebCourses.Data;
 
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+@inject ApplicationDbContext _context
 
 @{
     ViewData["Title"] = "Details";
@@ -84,6 +86,8 @@
         <strong>Available tests: </strong>
         @foreach (var test in Model.Tests)
         {
+            User currentUser = await UserManager.GetUserAsync(User);
+            var testResult = _context.UserTestResults.FirstOrDefault(utr => utr.TestId == test.Id && utr.UserId == currentUser.Id);
             var today = DateTime.Now.ToLocalTime();
             var deadline = test.Deadline.HasValue ? test.Deadline.Value : DateTime.MaxValue;
             var release = test.ReleaseDate.HasValue ? test.ReleaseDate.Value : DateTime.MaxValue;
@@ -91,15 +95,16 @@
             {
                 <li>
                     <strong>@test.Name</strong>
-                    @*@if (DB::table('user_points')->where('user_id', Auth::id())->where('test_id', $test->id)->value('finished') == true)
-                     Points: { { DB::table('user_points')->where('user_id', Auth::id())->where('test_id', $test->id)->value('points')} }
-                    / { {$test->questions()->count()} }
-                    @else*@
-                    <a asp-action="Solve" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Solve - WERKA ZERKNIJ DO KODU!!!! Views/Courses/Details tam masz, że powinny być wyświetlane punkty, jeśli rozwiązane</a>
-                    @*@endif*@
+                    @if (testResult != null)
+                    {
+                        <text> Your results:   @testResult.PointsCount </text>
+                    }
+                    else
+                    {
+                        <a asp-action="Solve" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Solve</a>
+                    }
                 </li>
             }
-
         }
     }
 }

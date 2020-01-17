@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +16,12 @@ namespace WebCourses.Controllers.Courses
     public class TestsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public TestsController(ApplicationDbContext context)
+        public TestsController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Tests
@@ -41,6 +45,7 @@ namespace WebCourses.Controllers.Courses
 
             var test = await _context.Tests
                 .Include(t => t.Course)
+                .Include(t => t.Questions)
                 .FirstOrDefaultAsync(t => t.Id == testId && t.CourseId == courseId);
             if (test == null)
             {
@@ -175,6 +180,12 @@ namespace WebCourses.Controllers.Courses
         [Route("/Courses/{courseId}/Tests/Solve/{testId}")]
         public async Task<IActionResult> Solve(string courseId, string testId)
         {
+            User currentUser = await _userManager.GetUserAsync(User);
+            if (!await _userManager.IsInRoleAsync(currentUser, "Student"))
+            {
+                return Challenge();
+            }
+
             if (courseId == null || testId == null)
             {
                 return NotFound();
@@ -192,7 +203,7 @@ namespace WebCourses.Controllers.Courses
             TestViewModel testViewModel = new TestViewModel
             {
                 TestId = test.Id,
-                CourseId = test.CourseId,
+                //CourseId = test.CourseId,
                 Questions = new List<QuestionViewModel>()
             };
             foreach(var question in test.Questions)
@@ -200,7 +211,7 @@ namespace WebCourses.Controllers.Courses
                 QuestionViewModel questionViewModel = new QuestionViewModel
                 {
                     QuestionId = question.Id,
-                    TestId = question.TestId,
+                    //TestId = question.TestId,
                     Content = question.Content,
                     Type = question.Type,
                     Answers = new List<AnswerViewModel>()
@@ -221,9 +232,15 @@ namespace WebCourses.Controllers.Courses
             return View(testViewModel);
         }
 
-        public async Task<int> Check([Bind("TestId,CourseId,Questions")] TestViewModel testViewModel, string courseId, string testId)
+        public async Task<IActionResult> Check([Bind("TestId,CourseId,Questions")] TestViewModel testViewModel, string courseId, string testId)
         {
+            User currentUser = await _userManager.GetUserAsync(User);
+            if (!await _userManager.IsInRoleAsync(currentUser, "Student"))
+            {
+                //return Challenge();
+            }
             int countCorrect = 0;
+            bool noOpenQuestion = true;
             foreach (var question in testViewModel.Questions)
             {
                 switch(question.Type)
@@ -242,11 +259,37 @@ namespace WebCourses.Controllers.Courses
                         }
                         break;
                     case Question.QuestionType.Open:
+                        noOpenQuestion = false;
+                        OpenQuestionAnswer openAnswer = new OpenQuestionAnswer
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = question.OpenAnswer,
+                            UserId = currentUser.Id,
+                            //User = currentUser,
+                            QuestionId = question.QuestionId,
+                            //Question = question,
+                            Checked = false
+                        };
+                        OpenQuestionAnswersController openAnswersController = new OpenQuestionAnswersController(_context, _userManager);
+                        await openAnswersController.Create(openAnswer);
                         break;
                     default: break;
                 }
             }
-            return countCorrect;
+
+            UserTestResult testResult = new UserTestResult
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = currentUser.Id,
+                //User=
+                TestId = testViewModel.TestId,
+                //Test=
+                PointsCount = countCorrect,
+                Checked = noOpenQuestion
+            };
+            UserTestResultsController resultsController = new UserTestResultsController(_context);
+            await resultsController.Create(testResult);
+            return RedirectToAction("Details", "Courses", new { id = courseId });
         }
     }
 }

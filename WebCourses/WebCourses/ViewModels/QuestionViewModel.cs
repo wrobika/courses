@@ -11,9 +11,7 @@ namespace WebCourses.ViewModels
     public class QuestionViewModel
     {
         [Key]
-        public string QuestionId { get; set; } //??????????????????
-
-        public string TestId { get; set; } //?????????????
+        public string QuestionId { get; set; }
 
         public string Content { get; set; }
 
