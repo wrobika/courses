@@ -252,11 +252,14 @@ namespace WebCourses.Controllers.Courses
                             countCorrect++;
                         break;
                     case Question.QuestionType.MultipleAnswer:
+                        bool allCorrect = true;
                         foreach (var answer in question.Answers)
                         {
-                            if (answer.Correct && answer.Selected)
-                                countCorrect++;
+                            if (answer.Correct != answer.Selected)
+                                allCorrect = false;
                         }
+                        if(allCorrect)
+                            countCorrect++;
                         break;
                     case Question.QuestionType.Open:
                         noOpenQuestion = false;

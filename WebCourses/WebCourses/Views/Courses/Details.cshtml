@@ -84,6 +84,7 @@
     else
     {
         <strong>Available tests: </strong>
+        <div class="list-group">
         @foreach (var test in Model.Tests)
         {
             User currentUser = await UserManager.GetUserAsync(User);
@@ -93,18 +94,34 @@
             var release = test.ReleaseDate.HasValue ? test.ReleaseDate.Value : DateTime.MaxValue;
             if (deadline > today && release < today)
             {
-                <li>
-                    <strong>@test.Name</strong>
-                    @if (testResult != null)
+            <a class="list-group-item list-group-item-action">
+                <strong>@test.Name</strong>
+                @if (testResult != null)
+                {
+                    double percent = testResult.PointsCount / test.Questions.Count;
+                    @if (testResult.Checked)
                     {
-                        <text> Your results:   @testResult.PointsCount </text>
+                        @if (percent >= 0.5)
+                        {
+                            <span class="badge bg-success"> Your results: @testResult.PointsCount / @test.Questions.Count </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"> Your results: @testResult.PointsCount / @test.Questions.Count </span>
+                        }
                     }
                     else
                     {
-                        <a asp-action="Solve" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id">Solve</a>
+                        <span class="badge bg-warning"> Your results: @testResult.PointsCount / @test.Questions.Count (open questions wait for teacher's mark) </span>
                     }
-                </li>
+                }
+                else
+                {
+                    <a asp-action="Solve" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id" class="btn btn-primary btn-block"> Solve </a>
+                }
+            </a>
             }
         }
+        </div>
     }
 }

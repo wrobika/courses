@@ -161,30 +161,28 @@ namespace WebCourses.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> MarkCorrect(string courseId, string testId, string answerId)
+        public async Task<IActionResult> Mark(string courseId, string testId, string answerId, bool correct)
         {
-            User currentUser = await _userManager.GetUserAsync(User);
             var answer = await _context.OpenQuestionAnswers
-                //.Include(a => a.Question)
                 .FirstOrDefaultAsync(a => a.Id == answerId);
-            //var testId = answer.Question.TestId;
             var testResult = await _context.UserTestResults
-                .FirstOrDefaultAsync(utr => utr.TestId == testId && utr.UserId == currentUser.Id);
-            testResult.PointsCount++;
-            UserTestResultsController resultsController = new UserTestResultsController(_context);
-            await resultsController.Edit(testResult.Id, testResult);
+                .Include(t => t.Test)
+                .FirstOrDefaultAsync(utr => utr.TestId == testId && utr.UserId == answer.UserId);
+            if(testResult != null)
+            {
+                answer.Checked = true;
+                await Edit(answer.Id, answer);
+                if (correct)
+                    testResult.PointsCount++;
+                var openAnswerInTest = _context.OpenQuestionAnswers
+                    .Include(a => a.Question)
+                    .Where(a => a.Question.TestId == testResult.TestId && a.UserId == answer.UserId);
 
-            answer.Checked = true;
-            await Edit(answer.Id, answer);
-            return RedirectToAction("Details", "Tests", new { courseId, testId });
-        }
-
-        public async Task<IActionResult> MarkIncorrect(string courseId, string testId, string answerId)
-        {
-            var answer = await _context.OpenQuestionAnswers
-                .FirstOrDefaultAsync(a => a.Id == answerId);
-            answer.Checked = true;
-            await Edit(answer.Id, answer);
+                if (await openAnswerInTest.AllAsync(a => a.Checked == true))
+                    testResult.Checked = true;
+                UserTestResultsController resultsController = new UserTestResultsController(_context);
+                await resultsController.Edit(testResult.Id, testResult);
+            }
             return RedirectToAction("Details", "Tests", new { courseId, testId });
         }
 

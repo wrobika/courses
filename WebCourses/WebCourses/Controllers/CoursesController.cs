@@ -117,6 +117,7 @@ namespace WebCourses.Controllers
                 .Include(c => c.CourseUsers)
                     .ThenInclude(cu => cu.User)
                 .Include(c => c.Tests)
+                    .ThenInclude(t => t.Questions)
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (course == null)

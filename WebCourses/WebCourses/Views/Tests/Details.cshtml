@@ -86,10 +86,10 @@
                         <strong>@question.Content</strong>
                         <div class="list-group-item">
                             @answer.Content
-                            <a asp-action="MarkIncorrect" asp-controller="OpenQuestionAnswers" asp-route-courseId="@Model.CourseId" asp-route-testId="@Model.Id" asp-route-answerId="@answer.Id" class="btn btn-danger pull-right" role="button">
+                            <a asp-action="Mark" asp-controller="OpenQuestionAnswers" asp-route-courseId="@Model.CourseId" asp-route-testId="@Model.Id" asp-route-answerId="@answer.Id" asp-route-correct="false" class="btn btn-danger pull-right" role="button">
                                 Incorrect
                             </a>
-                            <a asp-action="MarkCorrect" asp-controller="OpenQuestionAnswers" asp-route-courseId="@Model.CourseId" asp-route-testId="@Model.Id" asp-route-answerId="@answer.Id" class="btn btn-success pull-right" role="button">
+                            <a asp-action="Mark" asp-controller="OpenQuestionAnswers" asp-route-courseId="@Model.CourseId" asp-route-testId="@Model.Id" asp-route-answerId="@answer.Id" asp-route-correct="true" class="btn btn-success pull-right" role="button">
                                 Correct
                             </a>
                         </div>
