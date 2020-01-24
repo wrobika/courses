@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebCourses.Data;
 
 namespace WebCourses.Controllers
@@ -29,18 +30,15 @@ namespace WebCourses.Controllers
             {
                 return NotFound();
             }
-
-            // podejrzewam że będzie trzeba zrobić viewmodel z emailem użytkownika i kursem includując w _dbContext test, by móc wyciągnąć wyniki studenta dla każdego testu
-
-            //var test = await _context.Tests
-            //    .Include(t => t.Course)
-            //    .FirstOrDefaultAsync(t => t.Id == testId && t.CourseId == courseId);
-            //if (test == null)
-            //{
-            //    return NotFound();
-            //}
-
-            return View(/*student*/);
+            var student = await _context.Users
+                .FirstOrDefaultAsync(user => user.Id == studentId);
+            var userTestResults = _context.UserTestResults
+                .Include(result => result.Test)
+                    .ThenInclude(test => test.Questions)
+                .Where(result => result.Test.CourseId == courseId && result.UserId == studentId);
+            ViewBag.courseId = courseId;
+            ViewBag.userTestResults = userTestResults;
+            return View(student);
         }
     }
 }

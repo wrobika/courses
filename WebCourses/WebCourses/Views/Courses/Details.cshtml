@@ -94,32 +94,24 @@
             var release = test.ReleaseDate.HasValue ? test.ReleaseDate.Value : DateTime.MaxValue;
             if (deadline > today && release < today)
             {
-            <a class="list-group-item list-group-item-action">
+            <div class="list-group-item list-group-item-action">
                 <strong>@test.Name</strong>
                 @if (testResult != null)
                 {
-                    double percent = testResult.PointsCount / test.Questions.Count;
-                    @if (testResult.Checked)
+                    double percent = testResult.PointsCount / (double) test.Questions.Count * 100;
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @percent%" aria-valuenow=@percent aria-valuemin="0" aria-valuemax="100"> Your result: @percent% </div>
+                    @if (!testResult.Checked)
                     {
-                        @if (percent >= 0.5)
-                        {
-                            <span class="badge bg-success"> Your results: @testResult.PointsCount / @test.Questions.Count </span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger"> Your results: @testResult.PointsCount / @test.Questions.Count </span>
-                        }
+                        <text> open questions wait for teacher's mark </text>
                     }
-                    else
-                    {
-                        <span class="badge bg-warning"> Your results: @testResult.PointsCount / @test.Questions.Count (open questions wait for teacher's mark) </span>
-                    }
+                </div>
                 }
                 else
                 {
                     <a asp-action="Solve" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id" class="btn btn-primary btn-block"> Solve </a>
                 }
-            </a>
+            </div>
             }
         }
         </div>

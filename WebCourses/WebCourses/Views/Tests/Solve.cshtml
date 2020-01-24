@@ -19,7 +19,6 @@
         <form asp-action="Check" asp-controller="Tests" asp-route-courseId="@Model.CourseId" asp-route-testId="@Model.TestId">
             @Html.HiddenFor(model => Model.TestId)
             @Html.HiddenFor(model => Model.CourseId)
-
             @for (int i = 0; i < Model.Questions.Count; i++)
             {
                 var question = Model.Questions[i];
@@ -41,9 +40,10 @@
                             @switch (question.Type)
                             {
                                 case (Question.QuestionType.SingleAnswer):
-                                    @for (int j = 0; j < question.Answers.Count; j++)
+                                    var randomAnswers = question.Answers.OrderBy(a => Guid.NewGuid()).ToList();
+                                    @for (int j = 0; j < randomAnswers.Count(); j++)
                                     {
-                                        var answer = question.Answers[j];
+                                        var answer = randomAnswers[j];
                                         <div class="form-group">
                                             <div class="checkbox">
                                                 <label>
@@ -56,9 +56,10 @@
                                     break;
 
                                 case (Question.QuestionType.MultipleAnswer):
-                                    @for (int j = 0; j < question.Answers.Count; j++)
+                                    randomAnswers = question.Answers.OrderBy(a => Guid.NewGuid()).ToList();
+                                    @for (int j = 0; j < randomAnswers.Count; j++)
                                     {
-                                        var answer = question.Answers[j];
+                                        var answer = randomAnswers[j];
                                         <div class="form-group">
                                             <div class="checkbox">
                                                 <label>

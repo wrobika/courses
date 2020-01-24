@@ -80,7 +80,7 @@ namespace WebCourses.Controllers.Courses.Tests
                 question.TestId = testId;
                 _context.Questions.Add(question);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Edit), new { courseId = courseId, testId = testId, questionId = question.Id});
+                return RedirectToAction(nameof(Edit), new { courseId, testId, questionId = question.Id});
             }
             ViewData["TestId"] = new SelectList(_context.Tests, "Id", "Id", question.TestId);
             return View(question);

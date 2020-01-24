@@ -1,20 +1,44 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-<p> zerknij w kod Views/Students/Details</p>
+﻿@model WebCourses.Models.User
 
-@*@if (Auth::user()->identity == "teacher")
-                            <h4><strong>Student:</strong>
-                                {{DB::table('users')->where('id', $id)->value('name')}}</h4> <br>
-                            <h3><strong>Tests:</strong></h3> <br>
-                        @foreach($course->tests as $test)
-                                <strong>{{$test->name}} </strong>
-                                <p class="text-primary">@if(DB::table('user_points')->where('user_id', $id)->where('test_id', $test->id)->value('finished') == true)
-                                    Score: {{DB::table('user_points')->where('user_id', $id)->where('test_id', $test->id)->value('points')}}
-                                    / {{$test->questions()->count()}} <br>
-                                @else
-                                    <i>Not solved</i> <br>
-                                    @endif</p>
-                        @endforeach
-@endif*@
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+    </dl>
+
+    <h4>Tests</h4>
+    <hr />
+    <dl>
+        @foreach (var testResult in ViewBag.userTestResults)
+        {
+            double maxScore = testResult.Test.Questions.Count;
+            var avarageTestResult = testResult.PointsCount / maxScore * 100;
+            <dt>
+                @Html.DisplayName(testResult.Test.Name)
+            </dt>
+            <dd class="progress">
+                <div class="progress-bar" role="progressbar" style="width: @avarageTestResult%" aria-valuenow=@avarageTestResult aria-valuemin="0" aria-valuemax="100"> @avarageTestResult% </div>
+                @if (!testResult.Checked)
+                {
+                    <text> open questions wait for your mark </text>
+                }
+            </dd>
+        }
+    </dl>
+</div>
+<br /><br />
+<div>
+    <a asp-action="Details" asp-controller="Courses" asp-route-id="@ViewBag.courseId">Back to course</a>
+</div>
