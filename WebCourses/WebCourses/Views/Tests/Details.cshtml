@@ -50,13 +50,19 @@
             <dt>
                 @Html.DisplayName("Avarage result")
             </dt>
+            <dd>
+                @if (testResults.Count() != 0)
+                {
+                    <text> @avarageTestResult% </text>
+                }
+                @if (anyIncomplete)
+                {
+                    <text> (open questions wait for your mark) </text>
+                }
+            </dd>
         </dl>
         <div class="progress">
-            <div class="progress-bar bg-success" role="progressbar" style="width: @avarageTestResult%" aria-valuenow=@avarageTestResult aria-valuemin="0" aria-valuemax="100"> @avarageTestResult% </div>
-            @if (anyIncomplete)
-            {
-                <text> open questions wait for your mark </text>
-            }
+            <div class="progress-bar bg-success" role="progressbar" style="width: @avarageTestResult%" aria-valuenow=@avarageTestResult aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         Tutaj powinnam dodać jeszcze edycję testu, tzn. dat plus możliwość udostępniania
     </div>

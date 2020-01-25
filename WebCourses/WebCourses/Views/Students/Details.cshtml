@@ -28,13 +28,16 @@
             <dt>
                 @Html.DisplayName(testResult.Test.Name)
             </dt>
-            <dd class="progress">
-                <div class="progress-bar" role="progressbar" style="width: @avarageTestResult%" aria-valuenow=@avarageTestResult aria-valuemin="0" aria-valuemax="100"> @avarageTestResult% </div>
+            <dd>
+                result: @avarageTestResult%
                 @if (!testResult.Checked)
                 {
-                    <text> open questions wait for your mark </text>
+                    <text> (open questions wait for your mark) </text>
                 }
             </dd>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: @avarageTestResult%" aria-valuenow=@avarageTestResult aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
         }
     </dl>
 </div>
