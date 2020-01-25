@@ -1097,13 +1097,13 @@ textarea {
   line-height: inherit;
 }
 a {
-  color: #337ab7;
-  text-decoration: none;
+    color: #9c2a2a;
+    text-decoration: none;
 }
 a:hover,
 a:focus {
-  color: #23527c;
-  text-decoration: underline;
+    color: #8c2222;
+    text-decoration: underline;
 }
 a:focus {
   outline: 5px auto -webkit-focus-ring-color;
@@ -1144,10 +1144,10 @@ img {
   border-radius: 50%;
 }
 hr {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border: 0;
-  border-top: 1px solid #eeeeee;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid rgba(238,238,238,0.4);
 }
 .sr-only {
   position: absolute;
@@ -1337,7 +1337,7 @@ mark,
   color: #777777;
 }
 .text-primary {
-  color: #337ab7;
+    color: #9e343e;
 }
 a.text-primary:hover,
 a.text-primary:focus {
@@ -3211,28 +3211,28 @@ fieldset[disabled] .btn-default.focus {
   background-color: #333;
 }
 .btn-primary {
-  color: #fff;
-  background-color: #337ab7;
-  border-color: #2e6da4;
+    color: #efe4e4;
+    background-color: rgba(93,15,15,0.62);
+    border-color: rgba(72,17,17,0);
 }
 .btn-primary:focus,
 .btn-primary.focus {
-  color: #fff;
-  background-color: #286090;
-  border-color: #122b40;
+    color: #fff;
+    background-color: rgba(93,15,15,0.8);
+    border-color: rgba(93,15,15,0);
 }
 .btn-primary:hover {
-  color: #fff;
-  background-color: #286090;
-  border-color: #204d74;
+    color: #fff;
+    background-color: rgba(93,15,15,0.8);
+    border-color: rgba(93,15,15,0);
 }
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
-  color: #fff;
-  background-color: #286090;
-  background-image: none;
-  border-color: #204d74;
+    color: #fff;
+    background-color: rgba(93,15,15,0.8);
+    background-image: none;
+    border-color: #204d74;
 }
 .btn-primary:active:hover,
 .btn-primary.active:hover,
@@ -3243,9 +3243,9 @@ fieldset[disabled] .btn-default.focus {
 .btn-primary:active.focus,
 .btn-primary.active.focus,
 .open > .dropdown-toggle.btn-primary.focus {
-  color: #fff;
-  background-color: #204d74;
-  border-color: #122b40;
+    color: #fff;
+    background-color: rgba(93,15,15,0.7);
+    border-color: rgba(93,15,15,0);
 }
 .btn-primary.disabled:hover,
 .btn-primary[disabled]:hover,
@@ -3476,9 +3476,9 @@ fieldset[disabled] .btn-danger.focus {
   background-color: #fff;
 }
 .btn-link {
-  font-weight: 400;
-  color: #337ab7;
-  border-radius: 0;
+    font-weight: 400;
+    color: #b7333f;
+    border-radius: 0;
 }
 .btn-link,
 .btn-link:active,
@@ -3495,12 +3495,12 @@ fieldset[disabled] .btn-link {
 .btn-link:active {
   border-color: transparent;
 }
-.btn-link:hover,
-.btn-link:focus {
-  color: #23527c;
-  text-decoration: underline;
-  background-color: transparent;
-}
+    .btn-link:hover,
+    .btn-link:focus {
+        color: #9a2933;
+        text-decoration: underline;
+        background-color: transparent;
+    }
 .btn-link[disabled]:hover,
 fieldset[disabled] .btn-link:hover,
 .btn-link[disabled]:focus,
@@ -4172,8 +4172,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
-  color: #fff;
-  background-color: #337ab7;
+    color: #fff;
+    background-color: #844545;
 }
 .nav-stacked > li {
   float: none;
@@ -5322,12 +5322,12 @@ a.thumbnail.active {
   margin-bottom: 20px;
 }
 .list-group-item {
-  position: relative;
-  display: block;
-  padding: 10px 15px;
-  margin-bottom: -1px;
-  background-color: #fff;
-  border: 1px solid #ddd;
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0);
 }
 .list-group-item:first-child {
   border-top-left-radius: 4px;
@@ -5391,9 +5391,9 @@ a.list-group-item:hover,
 button.list-group-item:hover,
 a.list-group-item:focus,
 button.list-group-item:focus {
-  color: #555;
-  text-decoration: none;
-  background-color: #f5f5f5;
+    color: #555;
+    text-decoration: none;
+    background-color: rgba(255,255,255,0.5);
 }
 button.list-group-item {
   width: 100%;

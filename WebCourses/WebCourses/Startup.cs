@@ -70,7 +70,7 @@ namespace WebCourses
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Courses}/{action=Index}/{id?}");
             });
 
             CreateRoles(roleManager, userManager);
