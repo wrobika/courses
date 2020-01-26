@@ -134,7 +134,7 @@ namespace WebCourses.Controllers.Courses
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { courseId=courseId, testId=test.Id });
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", test.CourseId);
             return View(test);

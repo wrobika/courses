@@ -14,8 +14,12 @@ namespace WebCourses.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
+        [Required]
+        [StringLength(100)]
         public string Title { get; set; }
 
+        [Required]
+        [StringLength(200)]
         public string Description { get; set; }
 
         public IList<CourseUser> CourseUsers { get; set; }

@@ -83,8 +83,8 @@
     }
     else
     {
-        <strong>Available tests: </strong>
-        <div class="list-group">
+        <hr />
+        <h5><strong>Available tests: </strong></h5>
         @foreach (var test in Model.Tests)
         {
             User currentUser = await UserManager.GetUserAsync(User);
@@ -94,27 +94,34 @@
             var release = test.ReleaseDate.HasValue ? test.ReleaseDate.Value : DateTime.MaxValue;
             if (deadline > today && release < today)
             {
-            <div class="list-group-item list-group-item-action">
-                <strong>@test.Name</strong>
-                @if (testResult != null)
-                {
-                    double percent = testResult.PointsCount / (double)test.Questions.Count * 100;
-                    <text> your result: @percent % </text>
-                    @if (!testResult.Checked)
-                    {
-                        <text> (open questions wait for teacher's mark) </text>
-                    }
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: @percent%" aria-valuenow=@percent aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="list-group">
+                    <div class="list-group-item list-group-item-action">
+                        <strong>@test.Name</strong>
+                        <div class="list-group-item" style="background-color:rgba(255,255,255,0);">
+                            @if (testResult != null)
+                            {
+                                double percent = testResult.PointsCount / (double)test.Questions.Count * 100;
+                                @if (!testResult.Checked)
+                                {
+                                    <text> (open questions wait for teacher's mark) </text>
+                                }
+                                else
+                                {
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: @Math.Round(percent)%" aria-valuenow=@Math.Round(percent) aria-valuemin="0" aria-valuemax="100">@Math.Round(percent, 2)%</div>
+                                    </div>
+                                }
+
+                            }
+                            else
+                            {
+                                <a asp-action="Solve" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id" class="btn btn-success btn-block btn-xs"> Solve </a>
+                            }
+                        </div>
                     </div>
-                }
-                else
-                {
-                    <a asp-action="Solve" asp-controller="Tests" asp-route-courseId="@Model.Id" asp-route-testId="@test.Id" class="btn btn-success btn-block"> Solve </a>
-                }
-            </div>
+                </div>
             }
         }
-        </div>
+
     }
 }

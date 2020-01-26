@@ -11,24 +11,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create question</h2>
+<h2>Choose question type</h2>
+<hr />
 @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
 {
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="bg-primary text-white">
-                    <div class="panel-heading">Choose question type:</div>
+        <div class="col-md-10">
+            <form class="form-inline" method="post" action=@Url.Action("Choose","Questions", new { courseId = ViewContext.RouteData.Values["courseId"], testId = ViewContext.RouteData.Values["testId"]})>
+                <select class="form-control" asp-for="QuestionType" asp-items="@ViewBag.QuestionTypes"></select>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary"> Create question</button>
                 </div>
-                <div class="panel-body">
-                    <form class="form-inline" method="post" action=@Url.Action("Choose","Questions", new { courseId = ViewContext.RouteData.Values["courseId"], testId = ViewContext.RouteData.Values["testId"]})>
-                        <select class="form-control" asp-for="QuestionType" asp-items="@ViewBag.QuestionTypes"></select>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary"> Create question</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            </form>
         </div>
      </div>
 }

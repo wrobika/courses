@@ -112,7 +112,8 @@ namespace WebCourses.Controllers.Courses.Tests
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,TestId,Content,Type,AnswersCount,CorrectAnswersCount")] Question question)
+        [Route("/Courses/{courseId}/Tests/{testId}/Questions/Edit/{questionId}")]
+        public async Task<IActionResult> Edit(string id, [Bind("Id,TestId,Content,Type,AnswersCount,CorrectAnswersCount")] Question question, string courseId)
         {
             if (id != question.Id)
             {
@@ -137,7 +138,7 @@ namespace WebCourses.Controllers.Courses.Tests
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), new { courseId = courseId, testId = question.TestId, questionId = id });
             }
             ViewData["TestId"] = new SelectList(_context.Tests, "Id", "Id", question.TestId);
             return View(question);

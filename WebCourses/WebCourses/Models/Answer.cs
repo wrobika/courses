@@ -17,6 +17,8 @@ namespace WebCourses.Models
 
         public Question Question { get; set; }
 
+        [Required]
+        [StringLength(100)]
         public string Content { get; set; }
 
         public Boolean Correct { get; set; }

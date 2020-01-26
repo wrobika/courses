@@ -107,7 +107,8 @@ namespace WebCourses.Controllers.Courses.Tests.Questions
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,QuestionId,Content,Correct")] Answer answer)
+        [Route("/Courses/{courseId}/Tests/{testId}/Questions/{questionId}/Edit/{answerId}")]
+        public async Task<IActionResult> Edit(string id, [Bind("Id,QuestionId,Content,Correct")] Answer answer, string courseId, string testId)
         {
             if (id != answer.Id)
             {
@@ -117,8 +118,18 @@ namespace WebCourses.Controllers.Courses.Tests.Questions
             if (ModelState.IsValid)
             {
                 try
-                {
+                {                
                     _context.Update(answer);
+                    await _context.SaveChangesAsync();
+                    var correctCount = await _context.Answers
+                        .Where(a => a.QuestionId == answer.QuestionId)
+                        .Where(a => a.Correct)
+                        .CountAsync();
+                    var question = await _context.Questions
+                        .Where(q => q.Id == answer.QuestionId)
+                        .FirstAsync();
+                    question.CorrectAnswersCount = correctCount;
+                    _context.Update(question);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -132,7 +143,7 @@ namespace WebCourses.Controllers.Courses.Tests.Questions
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit),"Questions", new { courseId = courseId, testId = testId, questionId = answer.QuestionId });
             }
             ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Id", answer.QuestionId);
             return View(answer);

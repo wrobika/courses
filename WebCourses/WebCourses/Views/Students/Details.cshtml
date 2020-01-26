@@ -7,7 +7,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>User</h4>
+    <h4>Student</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -20,28 +20,31 @@
 
     <h4>Tests</h4>
     <hr />
-    <dl>
-        @foreach (var testResult in ViewBag.userTestResults)
-        {
-            double maxScore = testResult.Test.Questions.Count;
-            var avarageTestResult = testResult.PointsCount / maxScore * 100;
-            <dt>
-                @Html.DisplayName(testResult.Test.Name)
-            </dt>
-            <dd>
-                result: @avarageTestResult%
+    @foreach (var testResult in ViewBag.userTestResults)
+    {
+        double maxScore = testResult.Test.Questions.Count;
+        var avarageTestResult = testResult.PointsCount / maxScore * 100;
+    <div class="list-group">
+        <div class="list-group-item list-group-item-action">
+            <strong>@testResult.Test.Name</strong>
+            <div class="list-group-item" style="background-color:rgba(255,255,255,0);">
                 @if (!testResult.Checked)
                 {
                     <text> (open questions wait for your mark) </text>
                 }
-            </dd>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: @avarageTestResult%" aria-valuenow=@avarageTestResult aria-valuemin="0" aria-valuemax="100"></div>
+                else
+                {
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @Math.Round(@avarageTestResult)%" aria-valuenow=@Math.Round(@avarageTestResult) aria-valuemin="0" aria-valuemax="100">@Math.Round(@avarageTestResult, 2)%</div>
+                    </div>
+                }
             </div>
-        }
-    </dl>
+        </div>
+    </div>
+
+    }
 </div>
-<br /><br />
-<div>
-    <a asp-action="Details" asp-controller="Courses" asp-route-id="@ViewBag.courseId">Back to course</a>
-</div>
+    <br /><br />
+    <div>
+        <a asp-action="Details" asp-controller="Courses" asp-route-id="@ViewBag.courseId">Back to course</a>
+    </div>

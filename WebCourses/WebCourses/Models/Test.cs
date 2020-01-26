@@ -14,14 +14,20 @@ namespace WebCourses.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
+        [Required]
+        [StringLength(100)]
         public string Name { get; set; }
 
+        [Required]
+        [StringLength(200)]
         public string Description { get; set; }
 
         [DisplayName("Release Date")]
+        [DataType(DataType.DateTime)]
         public DateTime? ReleaseDate { get; set; } //data udostepnienia
 
         [DisplayName("Deadline Date")]
+        [DataType(DataType.DateTime)]
         public DateTime? Deadline { get; set; } //data deadlinu
 
         public string CourseId { get; set; }

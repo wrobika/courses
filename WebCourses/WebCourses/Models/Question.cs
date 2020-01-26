@@ -25,6 +25,8 @@ namespace WebCourses.Models
 
         public Test Test { get; set; }
 
+        [Required]
+        [StringLength(100)]
         public string Content { get; set; }
 
         public QuestionType Type { get; set; }

@@ -28,17 +28,17 @@
                         <label>
                             @if (ViewBag.CorrectAnswerCount == 0 && ViewBag.QuestionType == Question.QuestionType.SingleAnswer)
                             {
-                                <p>First, create correct answer</p>
+                                <p class="text-success">First, create <strong>CORRECT</strong> answer</p>
                                 <input asp-for="Correct" type="hidden" value="true" />
                             }
                             else if (ViewBag.QuestionType == Question.QuestionType.SingleAnswer && ViewBag.CorrectAnswerCount > 0)
                             {
-                                <p>Create incorrect answer</p>
+                                <p class="text-primary">Create <strong>INCORRECT</strong> answer</p>
                                 <input asp-for="Correct" type="hidden" value="false" />
                             }
                             else
                             {
-                                <input asp-for="Correct" /> @Html.DisplayNameFor(model => model.Correct)
+                                <input asp-for="Correct" /> <p class="text-success"><strong>correct</strong></p>
                             }
                         </label>
                     </div>

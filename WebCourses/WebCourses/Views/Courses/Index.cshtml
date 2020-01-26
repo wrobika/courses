@@ -27,14 +27,14 @@
         @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
         {
             <a asp-action="Create" class="btn btn-primary pull-right" role="button">
-                Create new...
+                Create new
             </a>
         }
 
         @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Student"))
         {
             <a asp-action="Apply" class="btn btn-primary pull-right" role="button">
-                Apply for...
+                Apply for
             </a>
         }
     </div>
