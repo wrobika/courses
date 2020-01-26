@@ -129,7 +129,8 @@
     <br />
     var today = DateTime.Now.ToLocalTime();
     var deadline = Model.Deadline.HasValue ? Model.Deadline.Value : DateTime.MaxValue;
-    if (deadline >= today)
+    var release = Model.ReleaseDate.HasValue ? Model.ReleaseDate.Value : DateTime.MaxValue;
+    if (deadline >= today && release>=today)
     {
         <a asp-action="Edit" asp-controller="Tests" asp-route-testId="@Model.Id" asp-route-courseId="@Model.CourseId" class="btn btn-primary pull-right">Edit test</a>
     }
