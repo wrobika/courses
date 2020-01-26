@@ -163,9 +163,10 @@ namespace WebCourses.Controllers.Courses
         // POST: Tests/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Route("/Courses/{courseId}/Tests/Delete/{testId}")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var test = await _context.Tests.FindAsync(id);
+            var test = await _context.Tests.Include(t => t.Questions).ThenInclude(q => q.Answers).FirstAsync(t => t.Id == id);
             _context.Tests.Remove(test);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

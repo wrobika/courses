@@ -15,22 +15,33 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             @*<div class="form-group">
-                <label asp-for="QuestionId" class="control-label"></label>
-                <select asp-for="QuestionId" class="form-control" asp-items="ViewBag.QuestionId"></select>
-                <span asp-validation-for="QuestionId" class="text-danger"></span>
-            </div>*@
+            <label asp-for="QuestionId" class="control-label"></label>
+            <select asp-for="QuestionId" class="form-control" asp-items="ViewBag.QuestionId"></select>
+            <span asp-validation-for="QuestionId" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
                 <input asp-for="Content" class="form-control" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Correct" readonly/> @Html.DisplayNameFor(model => model.Correct)
-                    </label>
+            @if (Model.Question.Type == Question.QuestionType.SingleAnswer)
+            {
+                <input type="hidden" asp-for="Correct" readonly />
+                <div class="form-group">
+                    <strong>@(Model.Correct? "Correct" : "Incorrect") answer</strong>
                 </div>
-            </div>
+            }
+            @if (Model.Question.Type == Question.QuestionType.MultipleAnswer)
+            {
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="Correct" readonly /> @Html.DisplayNameFor(model => model.Correct)
+                        </label>
+                    </div>
+                </div>
+            }
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
@@ -39,7 +50,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-controller="Questions" asp-route-courseId="@ViewContext.RouteData.Values["courseId"]" asp-route-testId="@ViewContext.RouteData.Values["testId"]" asp-route-questionId="@ViewContext.RouteData.Values["questionId"]">Back to question</a>
 </div>
 
 @section Scripts {

@@ -93,7 +93,7 @@ namespace WebCourses.Controllers.Courses.Tests.Questions
                 return NotFound();
             }
 
-            var answer = await _context.Answers.FindAsync(answerId);
+            var answer = await _context.Answers.Include(a => a.Question).FirstAsync(a => a.Id == answerId);
             if (answer == null)
             {
                 return NotFound();

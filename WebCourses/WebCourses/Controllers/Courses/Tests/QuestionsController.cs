@@ -167,12 +167,14 @@ namespace WebCourses.Controllers.Courses.Tests
         // POST: Questions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Route("/Courses/{courseId}/Tests/{testId}/Questions/Delete/{questionId}")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var question = await _context.Questions.FindAsync(id);
+            var question = await _context.Questions.Include(q => q.Answers).FirstAsync(q => q.Id == id);
+            var testId = question.TestId;
             _context.Questions.Remove(question);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Edit), "Tests");
         }
 
         private bool QuestionExists(string id)

@@ -17,45 +17,45 @@
     <div class="col-md-4">
         @if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Teacher"))
         {
-        <form asp-action="Edit" asp-controller="Questions">
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                @*<select asp-for="Type" class="form-control"></select>*@
-                <input asp-for="Type" class="form-control" value="@Model.Type" readonly />
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-            @if (Model.Type == Question.QuestionType.Open)
-            {
-                <input type="hidden" asp-for="AnswersCount" class="form-control" readonly />
-                <input type="hidden" asp-for="CorrectAnswersCount" class="form-control" readonly />
-            }
-            else
-            {
+            <form asp-action="Edit" asp-controller="Questions">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
                 <div class="form-group">
-                    <label asp-for="AnswersCount" class="control-label"></label>
-                    <input asp-for="AnswersCount" class="form-control" readonly />
-                    <span asp-validation-for="AnswersCount" class="text-danger"></span>
+                    <label asp-for="Content" class="control-label"></label>
+                    <input asp-for="Content" class="form-control" />
+                    <span asp-validation-for="Content" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CorrectAnswersCount" class="control-label"></label>
-                    <input asp-for="CorrectAnswersCount" class="form-control" readonly />
-                    <span asp-validation-for="CorrectAnswersCount" class="text-danger"></span>
+                    <label asp-for="Type" class="control-label"></label>
+                    @*<select asp-for="Type" class="form-control"></select>*@
+                    <input asp-for="Type" class="form-control" value="@Model.Type" readonly />
+                    <span asp-validation-for="Type" class="text-danger"></span>
                 </div>
-            }
+                @if (Model.Type == Question.QuestionType.Open)
+                {
+                    <input type="hidden" asp-for="AnswersCount" class="form-control" readonly />
+                    <input type="hidden" asp-for="CorrectAnswersCount" class="form-control" readonly />
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label asp-for="AnswersCount" class="control-label"></label>
+                        <input asp-for="AnswersCount" class="form-control" readonly />
+                        <span asp-validation-for="AnswersCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CorrectAnswersCount" class="control-label"></label>
+                        <input asp-for="CorrectAnswersCount" class="form-control" readonly />
+                        <span asp-validation-for="CorrectAnswersCount" class="text-danger"></span>
+                    </div>
+                }
 
-            <div class="form-group">
-                <input type="submit" value="Save question" class="btn btn-default" />
-                <a asp-action="Delete" asp-controller="Questions" asp-route-questionId="@Model.Id" asp-route-testId="@ViewContext.RouteData.Values["testId"]" asp-route-courseId="@ViewContext.RouteData.Values["courseId"]" class="btn btn-danger">Delete</a>
-            </div>
-        </form>
+                <div class="form-group">
+                    <input type="submit" value="Save question" class="btn btn-default" />
+                    <a asp-action="Delete" asp-controller="Questions" asp-route-questionId="@Model.Id" asp-route-testId="@ViewContext.RouteData.Values["testId"]" asp-route-courseId="@ViewContext.RouteData.Values["courseId"]" class="btn btn-danger">Delete</a>
+                </div>
+            </form>
         }
     </div>
 </div>
@@ -64,8 +64,8 @@
 {
     @await Html.PartialAsync("_AnswersList", Model.Answers)
     <a asp-action="Create" asp-controller="Answers" asp-route-courseId="@ViewContext.RouteData.Values["courseId"]" asp-route-testId="@ViewContext.RouteData.Values["testId"]" asp-route-questionId="@ViewContext.RouteData.Values["questionId"]" class="btn btn-primary pull-right" role="button">Add answer</a>
-    <a asp-action="Edit" asp-controller="Tests" asp-route-courseId="@ViewContext.RouteData.Values["courseId"]" asp-route-testId="@ViewContext.RouteData.Values["testId"]">Back to edit test...</a>
 }
+<a asp-action="Edit" asp-controller="Tests" asp-route-courseId="@ViewContext.RouteData.Values["courseId"]" asp-route-testId="@ViewContext.RouteData.Values["testId"]">Back to edit test...</a>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
